@@ -1,0 +1,43 @@
+  const updateExecutionTypeMutation = useMutation({
+    mutationFn: async () => {
+      if (!saleId) throw new Error("ID da venda não fornecido");
+      
+      // Validação obrigatória: tipo de serviço precisa ser selecionado
+      if (!selectedServiceTypeId) {
+        throw new Error("É necessário selecionar um tipo de execução");
+      }
+      
+      // Preparar dados para envio
+      const requestData: any = {
+        serviceTypeId: selectedServiceTypeId,
+      };
+      
+      const response = await fetch(`/api/sales/${saleId}/update-execution-type`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao atualizar tipo de execução");
+      }
+      
+      // Se temos prestadores selecionados, atualizamos
+      if (selectedServiceProviderIds.length > 0) {
+        await updateServiceProvidersMutation.mutateAsync();
+      }
+      
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sales"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sales", saleId] });
+      toast({
+        title: "Tipo de execução atualizado",
+        description: "O tipo de execução da venda foi atualizado com sucesso",
+      });
+    },
+    onError: (error: Error) => {

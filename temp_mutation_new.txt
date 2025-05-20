@@ -1,0 +1,62 @@
+  const startExecutionMutation = useMutation({
+    mutationFn: async () => {
+      if (!saleId) throw new Error("ID da venda não fornecido");
+      
+      // Validação obrigatória: tipo de serviço precisa ser selecionado
+      if (!selectedServiceTypeId) {
+        throw new Error("É necessário selecionar um tipo de execução");
+      }
+      
+      // Preparar dados para envio
+      const requestData: any = {
+        serviceTypeId: selectedServiceTypeId,
+      };
+      
+      const response = await fetch(`/api/sales/${saleId}/start-execution`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao iniciar execução da venda");
+      }
+      
+      // Se a opção de prestadores parceiros estiver marcada
+      if (hasPrestadorParceiro) {
+        // Verificar se pelo menos um prestador foi selecionado quando o checkbox está ativo
+        if (selectedServiceProviderIds.length === 0) {
+          throw new Error("É necessário selecionar pelo menos um prestador parceiro");
+        }
+        
+        // Atualizar os prestadores selecionados
+        await updateServiceProvidersMutation.mutateAsync();
+      } else {
+        // Se não tem prestadores parceiros, remover todos os prestadores associados (se houver)
+        if (saleServiceProviders.length > 0) {
+          setSelectedServiceProviderIds([]);
+          await updateServiceProvidersMutation.mutateAsync();
+        }
+      }
+      
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sales"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/sales", saleId] });
+      toast({
+        title: "Execução iniciada",
+        description: "A execução da venda foi iniciada com sucesso",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Erro ao iniciar execução",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });

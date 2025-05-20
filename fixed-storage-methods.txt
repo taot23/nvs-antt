@@ -1,0 +1,40 @@
+// Método createSaleOperationalCost - linha ~2525
+return {
+  id: row.id,
+  saleId: row.sale_id,
+  description: row.description,
+  costTypeId: row.cost_type_id,
+  amount: row.amount,
+  date: row.date, // Mantendo como string para compatibilidade
+  paymentDate: row.payment_date, // Adicionando o campo de data de pagamento
+  responsibleId: row.responsible_id,
+  serviceProviderId: row.service_provider_id || null,
+  notes: row.notes || null,
+  paymentReceiptUrl: row.payment_receipt_url || null,
+  createdAt: new Date(row.created_at),
+  updatedAt: new Date(row.updated_at),
+};
+
+// Método updateSaleOperationalCost - linha ~2620
+return {
+  id: row.id,
+  saleId: row.sale_id,
+  description: row.description,
+  costTypeId: row.cost_type_id,
+  amount: row.amount,
+  date: row.date, // Mantendo como string para compatibilidade
+  paymentDate: row.payment_date, // Adicionando o campo de data de pagamento
+  responsibleId: row.responsible_id,
+  serviceProviderId: row.service_provider_id || null,
+  notes: row.notes || null,
+  paymentReceiptUrl: row.payment_receipt_url || null,
+  createdAt: new Date(row.created_at),
+  updatedAt: new Date(row.updated_at),
+};
+
+// Adicionar também o código para verificar se a data de pagamento está sendo atualizada no método updateSaleOperationalCost - antes de "Sempre atualizar o updated_at"
+
+if (data.paymentDate !== undefined) {
+  updates.push(`payment_date = $${paramIndex++}`);
+  values.push(data.paymentDate);
+}

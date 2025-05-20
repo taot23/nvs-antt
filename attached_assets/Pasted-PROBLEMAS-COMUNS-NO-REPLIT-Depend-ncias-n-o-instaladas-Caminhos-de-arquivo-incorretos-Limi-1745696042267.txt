@@ -1,0 +1,119 @@
+PROBLEMAS COMUNS NO REPLIT:
+
+Dependências não instaladas
+
+Caminhos de arquivo incorretos
+
+Limitações de armazenamento temporário
+
+Necessidade de geração in-browser
+
+SUGESTÃO DE PROMPT PARA SEU RELATÓRIO:
+
+python
+# Instale primeiro (no console do Replit):
+# pip install pandas xlsxwriter reportlab jinja2
+
+import pandas as pd
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from io import BytesIO
+import jinja2
+
+# Dados de exemplo (substitua pelos seus)
+dados = {
+    "Data": ["2023-01-01", "2023-01-02", "2023-01-03"],
+    "Descrição": ["Salário", "Aluguel", "Supermercado"],
+    "Valor": [5000.00, -1200.00, -350.50],
+    "Categoria": ["Receita", "Despesa", "Despesa"]
+}
+
+df = pd.DataFrame(dados)
+
+# Geração do Excel
+def gerar_excel():
+    writer = pd.ExcelWriter('relatorio_financeiro.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, index=False, sheet_name='Transações')
+    workbook = writer.book
+    worksheet = writer.sheets['Transações']
+    
+    # Formatação
+    money_format = workbook.add_format({'num_format': 'R$ #,##0.00'})
+    worksheet.set_column('C:C', 15, money_format)
+    
+    writer.close()
+    return open('relatorio_financeiro.xlsx', 'rb')
+
+# Geração do PDF
+def gerar_pdf():
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4)
+    
+    # Cabeçalho
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(72, 800, "Relatório Financeiro")
+    
+    # Tabela
+    y_position = 750
+    col_widths = [100, 200, 100, 100]
+    
+    # Cabeçalhos da tabela
+    headers = df.columns
+    for i, header in enumerate(headers):
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(72 + sum(col_widths[:i]), y_position, header)
+    
+    # Linhas
+    c.setFont("Helvetica", 10)
+    for index, row in df.iterrows():
+        y_position -= 20
+        if y_position < 50:
+            c.showPage()
+            y_position = 750
+        for i, (col, value) in enumerate(row.items()):
+            c.drawString(72 + sum(col_widths[:i]), y_position, str(value))
+    
+    c.save()
+    buffer.seek(0)
+    return buffer
+
+# Para usar no Replit
+try:
+    # Gerar arquivos
+    excel_file = gerar_excel()
+    pdf_buffer = gerar_pdf()
+
+    # Salvar arquivos
+    with open('relatorio_financeiro.xlsx', 'wb') as f:
+        f.write(excel_file.read())
+    
+    with open('relatorio_financeiro.pdf', 'wb') as f:
+        f.write(pdf_buffer.getvalue())
+
+    print("✅ Arquivos gerados com sucesso!")
+    print("📂 Verifique na aba de arquivos à esquerda:")
+    print("- relatorio_financeiro.xlsx")
+    print("- relatorio_financeiro.pdf")
+
+except Exception as e:
+    print(f"❌ Erro: {str(e)}")
+    print("⚠️ Verifique se todas as dependências estão instaladas")
+PASSO A PASSO PARA USAR:
+
+Clique no ícone de pacote (Packages) na barra lateral
+
+Instale estas dependências:
+
+pandas
+
+xlsxwriter
+
+reportlab
+
+jinja2
+
+Substitua a seção dados por suas informações reais
+
+Execute o código
+
+Verifique a aba de arquivos à esquerda para baixar os relatórios

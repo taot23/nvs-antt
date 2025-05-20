@@ -1,0 +1,137 @@
+# Instale primeiro (no console do Replit):
+# pip install pandas xlsxwriter reportlab
+
+import pandas as pd
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib import colors
+
+# Dados de exemplo (substitua pelos seus)
+dados = {
+    "N° OS": [1],
+    "Vendedor": ["admin"],
+    "Cliente": ["dsa23d1s546"],
+    "Data": ["25/04/2025"],
+    "Valor Total": [30.00],
+    "Valor Pago": [30.00],
+    "Custos": [350.00],
+    "Resultado": [-320.00],
+    "Status": ["Pago"]
+}
+
+df = pd.DataFrame(dados)
+
+# Adicionar linha de total
+total = {
+    "N° OS": f"Total de {len(df)} vendas",
+    "Vendedor": "",
+    "Cliente": "",
+    "Data": "",
+    "Valor Total": df["Valor Total"].sum(),
+    "Valor Pago": df["Valor Pago"].sum(),
+    "Custos": df["Custos"].sum(),
+    "Resultado": df["Resultado"].sum(),
+    "Status": ""
+}
+
+df = pd.concat([df, pd.DataFrame([total])], ignore_index=True)
+
+# Função para formatar moeda
+def formatar_moeda(valor):
+    return f'R$ {abs(valor):,.2f}' if isinstance(valor, (int, float)) else valor
+
+# Geração do Excel
+def gerar_excel():
+    with pd.ExcelWriter('relatorio_os.xlsx', engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Relatório')
+        
+        workbook = writer.book
+        worksheet = writer.sheets['Relatório']
+        
+        # Formatação monetária
+        formato_moeda = workbook.add_format({'num_format': 'R$ #,##0.00'})
+        colunas_moeda = ['Valor Total', 'Valor Pago', 'Custos', 'Resultado']
+        
+        for col in colunas_moeda:
+            col_idx = df.columns.get_loc(col)
+            worksheet.set_column(col_idx, col_idx, 15, formato_moeda)
+        
+        # Ajuste automático de colunas
+        for idx, col in enumerate(df.columns):
+            max_len = max(df[col].astype(str).apply(len).max(), len(col)) + 2
+            worksheet.set_column(idx, idx, max_len)
+
+# Geração do PDF
+def gerar_pdf():
+    c = canvas.Canvas("relatorio_os.pdf", pagesize=A4)
+    width, height = A4
+    
+    # Cabeçalho
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(50, height - 50, "Relatório de Ordens de Serviço")
+    
+    # Converter DataFrame para lista incluindo cabeçalhos
+    dados_tabela = [df.columns.tolist()]
+    for _, row in df.iterrows():
+        dados_tabela.append([formatar_moeda(val) if isinstance(val, (int, float)) else val for val in row])
+    
+    # Criar tabela
+    tabela = Table(dados_tabela, repeatRows=1)
+    estilo = TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,0), 10),
+        ('BOTTOMPADDING', (0,0), (-1,0), 12),
+        ('BACKGROUND', (0,1), (-1,-2), colors.beige),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ('VALIGN', (0,0), (-1,-1), 'MIDDLE')
+    ])
+    
+    tabela.setStyle(estilo)
+    tabela.wrapOn(c, width - 100, height)
+    tabela.drawOn(c, 50, height - 200)
+    
+    c.save()
+
+# Execução principal
+try:
+    gerar_excel()
+    gerar_pdf()
+    print("✅ Relatórios gerados com sucesso!")
+    print("📂 Arquivos disponíveis:")
+    print("- relatorio_os.xlsx")
+    print("- relatorio_os.pdf")
+
+except Exception as e:
+    print(f"❌ Erro: {str(e)}")
+    print("Verifique: 1) Dependências instaladas 2) Formato dos dados 3) Permissões de arquivo")
+Principais melhorias:
+
+Estrutura exata da sua tabela com todas as colunas
+
+Cálculo automático do Resultado (Valor Pago - Custos)
+
+Linha de totalização completa
+
+Formatação monetária profissional (R$ 00.000,00)
+
+Grid estilo planilha no PDF
+
+Ajuste automático de largura de colunas no Excel
+
+Tratamento de valores negativos
+
+Cabeçalho destacado em cinza
+
+Para usar:
+
+Substitua os dados de exemplo pelos seus reais
+
+Adicione mais linhas conforme necessário
+
+Execute o código
+
+Os arquivos aparecerão na barra lateral esquerda

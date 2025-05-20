@@ -1,0 +1,16 @@
+// Se a opção de prestadores parceiros estiver marcada
+      if (hasPrestadorParceiro) {
+        // Verificar se pelo menos um prestador foi selecionado quando o checkbox está ativo
+        if (selectedServiceProviderIds.length === 0) {
+          throw new Error("É necessário selecionar pelo menos um prestador parceiro");
+        }
+        
+        // Atualizar os prestadores selecionados
+        await updateServiceProvidersMutation.mutateAsync();
+      } else {
+        // Se não tem prestadores parceiros, remover todos os prestadores associados (se houver)
+        if (saleServiceProviders.length > 0) {
+          setSelectedServiceProviderIds([]);
+          await updateServiceProvidersMutation.mutateAsync();
+        }
+      }

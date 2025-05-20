@@ -1,0 +1,11 @@
+# Arquivos e diretórios a serem ignorados durante o upload para o Google Cloud
+.git
+.gitignore
+node_modules/
+npm-debug.log
+*.md
+.env.local
+.env.development
+attached_assets/
+*.log
+*.sql

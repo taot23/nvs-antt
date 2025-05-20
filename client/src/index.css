@@ -1,0 +1,233 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilo personalizado para posicionar toasts no canto superior direito */
+.top-toast {
+  position: fixed !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  margin: 0 !important;
+}
+
+:root {
+  /* Definição das cores de status como variáveis CSS - VALORES INTENSIFICADOS */
+  --color-corrected-bg: rgba(250, 240, 137, 0.35); /* Amarelo intenso */
+  --color-completed-bg: rgba(134, 239, 172, 0.35); /* Verde intenso */
+  --color-in-progress-bg: rgba(255, 159, 64, 0.4); /* Laranja intenso */
+  --color-returned-bg: rgba(252, 165, 165, 0.35); /* Vermelho intenso */
+}
+
+/* SOLUÇÃO FINAL 2.0 - ABORDAGEM DIRETA COM BORDAS E CORES INTENSAS */
+
+/* DEFINIÇÃO DE ESTILOS DE CÉLULAS POR STATUS COM BORDAS DESTACADAS */
+table tbody tr.status-row-corrected td { 
+    background-color: var(--color-corrected-bg) !important;
+    border: 1px solid rgba(250, 240, 137, 0.6) !important;
+}
+table tbody tr.status-row-corrected td:first-child { 
+    border-left: 5px solid rgba(234, 220, 0, 0.8) !important;
+}
+
+table tbody tr.status-row-completed td { 
+    background-color: var(--color-completed-bg) !important;
+    border: 1px solid rgba(134, 239, 172, 0.6) !important;
+}
+table tbody tr.status-row-completed td:first-child { 
+    border-left: 5px solid rgba(74, 222, 128, 0.8) !important;
+}
+
+table tbody tr.status-row-in_progress td { 
+    background-color: var(--color-in-progress-bg) !important;
+    border: 1px solid rgba(255, 159, 64, 0.6) !important;
+}
+table tbody tr.status-row-in_progress td:first-child { 
+    border-left: 5px solid rgba(255, 128, 0, 0.8) !important;
+}
+
+table tbody tr.status-row-returned td { 
+    background-color: var(--color-returned-bg) !important;
+    border: 1px solid rgba(252, 165, 165, 0.6) !important;
+}
+table tbody tr.status-row-returned td:first-child { 
+    border-left: 5px solid rgba(239, 68, 68, 0.8) !important;
+}
+
+/* REGRAS ESPECÍFICAS PARA CARD MOBILE - USANDO TODAS AS CLASSES DISPONÍVEIS */
+div[class*="overflow"].status-card-corrected { 
+    background-color: var(--color-corrected-bg) !important; 
+    border: 2px solid rgba(250, 240, 137, 0.6) !important;
+    border-left: 5px solid rgba(234, 220, 0, 0.8) !important;
+}
+div[class*="overflow"].status-card-completed { 
+    background-color: var(--color-completed-bg) !important; 
+    border: 2px solid rgba(134, 239, 172, 0.6) !important;
+    border-left: 5px solid rgba(74, 222, 128, 0.8) !important;
+}
+div[class*="overflow"].status-card-in_progress { 
+    background-color: var(--color-in-progress-bg) !important; 
+    border: 2px solid rgba(255, 159, 64, 0.6) !important;
+    border-left: 5px solid rgba(255, 128, 0, 0.8) !important;
+}
+div[class*="overflow"].status-card-returned { 
+    background-color: var(--color-returned-bg) !important; 
+    border: 2px solid rgba(252, 165, 165, 0.6) !important;
+    border-left: 5px solid rgba(239, 68, 68, 0.8) !important;
+}
+
+/* Regras adicionais para garantir aplicação direta nos elementos com data-status */
+tr[data-status="corrected"] td {
+    background-color: var(--color-corrected-bg) !important;
+    border: 1px solid rgba(250, 240, 137, 0.6) !important;
+}
+tr[data-status="corrected"] td:first-child {
+    border-left: 5px solid rgba(234, 220, 0, 0.8) !important;
+}
+
+tr[data-status="completed"] td {
+    background-color: var(--color-completed-bg) !important;
+    border: 1px solid rgba(134, 239, 172, 0.6) !important;
+}
+tr[data-status="completed"] td:first-child {
+    border-left: 5px solid rgba(74, 222, 128, 0.8) !important;
+}
+
+tr[data-status="in_progress"] td {
+    background-color: var(--color-in-progress-bg) !important;
+    border: 1px solid rgba(255, 159, 64, 0.6) !important;
+}
+tr[data-status="in_progress"] td:first-child {
+    border-left: 5px solid rgba(255, 128, 0, 0.8) !important;
+}
+
+tr[data-status="returned"] td {
+    background-color: var(--color-returned-bg) !important;
+    border: 1px solid rgba(252, 165, 165, 0.6) !important;
+}
+tr[data-status="returned"] td:first-child {
+    border-left: 5px solid rgba(239, 68, 68, 0.8) !important;
+}
+
+div[data-status="corrected"] {
+    background-color: var(--color-corrected-bg) !important;
+    border: 2px solid rgba(250, 240, 137, 0.6) !important;
+    border-left: 5px solid rgba(234, 220, 0, 0.8) !important;
+}
+
+div[data-status="completed"] {
+    background-color: var(--color-completed-bg) !important;
+    border: 2px solid rgba(134, 239, 172, 0.6) !important;
+    border-left: 5px solid rgba(74, 222, 128, 0.8) !important;
+}
+
+div[data-status="in_progress"] {
+    background-color: var(--color-in-progress-bg) !important;
+    border: 2px solid rgba(255, 159, 64, 0.6) !important;
+    border-left: 5px solid rgba(255, 128, 0, 0.8) !important;
+}
+
+div[data-status="returned"] {
+    background-color: var(--color-returned-bg) !important;
+    border: 2px solid rgba(252, 165, 165, 0.6) !important;
+    border-left: 5px solid rgba(239, 68, 68, 0.8) !important;
+}
+
+/* Fix para inputs em iOS para evitar zoom indesejado */
+@media screen and (max-width: 767px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Ajustes adicionais para melhor responsividade */
+@media screen and (max-width: 640px) {
+  .dialog-content {
+    padding: 1rem !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Compatibilidade entre navegadores */
+/* Resets e normalizações */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix para iOS Safari */
+input,
+button,
+textarea,
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0.5rem;
+  font-family: inherit;
+}
+
+/* Melhorias para Firefox */
+@-moz-document url-prefix() {
+  input, button, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* Fix para elementos flex no Safari */
+.flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.flex-col {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+/* Melhorias em dispositivos touchscreen */
+@media (hover: none) {
+  button:hover {
+    background-color: inherit;
+  }
+}
+
+/* Ajustes para telas pequenas */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px; /* Evita zoom automático em campos de formulário no iOS */
+  }
+  
+  /* Melhorias para toque em dispositivos móveis */
+  button, 
+  [role="button"],
+  a {
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Ajuste para tabelas em mobile */
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  /* Otimiza scrolling em dispositivos móveis */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
